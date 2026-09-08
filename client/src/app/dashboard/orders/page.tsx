@@ -25,6 +25,8 @@ import { useAuth } from '@/hooks/useAuth';
 import Button from '@/components/ui/Button';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
+
 // 🔥 রিউজেবল সার্চ ও পেজিনেশন কম্পোনেন্ট
 interface SearchAndPaginationProps {
   searchQuery: string;

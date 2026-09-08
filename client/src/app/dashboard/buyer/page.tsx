@@ -13,6 +13,8 @@ import { useAuth } from '@/hooks/useAuth';
 import ImageWithLoader from '@/components/ui/ImageWithLoader';
 import Skeleton from '@/components/ui/Skeleton'; // 🔥 Skeleton ইম্পোর্ট করা হয়েছে
 
+export const dynamic = 'force-dynamic';
+
 // 🔥 রিউজেবল সার্চ ও পেজিনেশন কম্পোনেন্ট
 interface SearchAndPaginationProps {
   searchQuery: string;

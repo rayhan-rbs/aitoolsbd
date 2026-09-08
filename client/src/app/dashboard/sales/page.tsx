@@ -19,6 +19,8 @@ import { supabase } from '@/lib/supabaseClient';
 import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
+
 // 🔥 রিউজেবল সার্চ ও পেজিনেশন কম্পোনেন্ট (মেইন ফাংশনের বাইরে, যাতে ফোকাস লস না হয়)
 interface SearchAndPaginationProps {
   searchQuery: string;

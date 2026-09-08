@@ -830,6 +830,8 @@ import { useAuth } from '@/hooks/useAuth';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
 
+export const dynamic = 'force-dynamic';
+
 const categories = [
   'AI Prompt', 'AI Template', 'AI Automation', 'ChatGPT Tools', 
   'Gemini Tools', 'Canva Template', 'Excel Automation', 

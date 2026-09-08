@@ -17,6 +17,8 @@ import {
 } from '@fortawesome/free-brands-svg-icons';
 import { supabase } from '@/lib/supabaseClient';
 
+export const dynamic = 'force-dynamic';
+
 const categories = [
   { name: 'All', icon: faRocket, color: 'from-indigo-500 to-purple-500' },
   { name: 'AI Prompt', icon: faRobot, color: 'from-purple-500 to-pink-500' },

@@ -15,6 +15,8 @@ import { useAuth } from '@/hooks/useAuth';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
 
+export const dynamic = 'force-dynamic';
+
 export default function SettingsPage() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();

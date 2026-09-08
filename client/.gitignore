@@ -30,3 +30,10 @@ Thumbs.db
 # Sensitive files
 *.key
 server/
+
+Add-Content -Path .gitignore -Value "`n# Sensitive server files"
+Add-Content -Path .gitignore -Value "server/"
+Add-Content -Path .gitignore -Value "*.key"
+Add-Content -Path .gitignore -Value "*.json"
+Add-Content -Path .gitignore -Value "!package.json"
+Add-Content -Path .gitignore -Value "!package-lock.json"

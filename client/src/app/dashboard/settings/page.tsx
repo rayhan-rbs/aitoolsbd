@@ -27,10 +27,12 @@ export default function SettingsPage() {
   const [accessibility, setAccessibility] = useState({
     reduceMotion: false,
     highContrast: false,
-    fontSize: 100, // 100% default
-    language: 'bn', // 'bn' for Bangla, 'en' for English
-    dyslexiaFont: false,      // 🔥 নতুন
-    readingMode: false,       // 🔥 নতুন
+    fontSize: 100,
+    language: 'bn',
+    dyslexiaFont: false,
+    readingMode: false,
+    textSpacing: 'normal',      // 🔥 নতুন যোগ করা হয়েছে
+    simpleMode: false           // 🔥 নতুন যোগ করা হয়েছে
   });
   
   const [feedback, setFeedback] = useState<{ isOpen: boolean; type: 'success' | 'error'; message: string }>({ 

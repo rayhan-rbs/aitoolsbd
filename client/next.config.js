@@ -1,6 +1,4 @@
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
-});
+
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -34,10 +32,8 @@ const nextConfig = {
       exclude: ['error', 'warn'],
     } : false,
   },
-  // 🔥 Bundle size কমানোর জন্য
-  experimental: {
-    optimizePackageImports: ['@fortawesome/react-fontawesome', '@fortawesome/free-solid-svg-icons', '@fortawesome/free-brands-svg-icons'],
-  },
+  
+ 
 };
 
 module.exports = nextConfig;

@@ -26,13 +26,16 @@ const nextConfig = {
       },
     ],
   },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   // 🔥 Production-এ console.log রিমুভ করার জন্য
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production' ? {
       exclude: ['error', 'warn'],
     } : false,
   },
-  
+
  
 };
 

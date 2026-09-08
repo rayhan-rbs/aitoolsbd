@@ -1,0 +1,235 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300;
+    font-family: var(--font-bangla), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  padding-right: 0px !important; 
+  overflow-x: hidden;
+}
+
+/* Glassmorphism for Dark/Light mode */
+.glass {
+  @apply bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-slate-200/50 dark:border-slate-800/50;
+}
+
+.reduce-motion *,
+.reduce-motion *::before,
+.reduce-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* 🔥 Reduce Motion */
+.reduce-motion *,
+.reduce-motion *::before,
+.reduce-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* 🎨 High Contrast Mode */
+.high-contrast {
+  --hc-bg: #000000;
+  --hc-text: #ffffff;
+  --hc-border: #ffffff;
+}
+
+.high-contrast body {
+  background-color: var(--hc-bg) !important;
+  color: var(--hc-text) !important;
+}
+
+.high-contrast .bg-white {
+  background-color: #000000 !important;
+}
+
+.high-contrast .bg-slate-50,
+.high-contrast .bg-slate-100 {
+  background-color: #1a1a1a !important;
+}
+
+.high-contrast .text-slate-900,
+.high-contrast .text-slate-700,
+.high-contrast .text-slate-600 {
+  color: #ffffff !important;
+}
+
+.high-contrast .text-slate-400,
+.high-contrast .text-slate-500 {
+  color: #cccccc !important;
+}
+
+.high-contrast .border-slate-200,
+.high-contrast .border-slate-100,
+.high-contrast .border-slate-800 {
+  border-color: #ffffff !important;
+}
+
+.high-contrast .dark\:bg-slate-900,
+.high-contrast .dark\:bg-slate-950 {
+  background-color: #000000 !important;
+}
+
+.high-contrast .dark\:text-white,
+.high-contrast .dark\:text-slate-300 {
+  color: #ffffff !important;
+}
+
+.high-contrast .dark\:border-slate-800,
+.high-contrast .dark\:border-slate-700 {
+  border-color: #ffffff !important;
+}
+
+.high-contrast a,
+.high-contrast button {
+  text-decoration: underline !important;
+}
+
+/* ================= ACCESSIBILITY ENHANCEMENTS ================= */
+
+/* 🔥 ১. Skip to Content Link (Keyboard Navigation) */
+.skip-to-content {
+  position: absolute;
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #4f46e5;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 0 0 8px 8px;
+  font-weight: bold;
+  z-index: 9999;
+  transition: top 0.3s ease;
+  text-decoration: none;
+}
+
+.skip-to-content:focus {
+  top: 0;
+  outline: 3px solid #fbbf24;
+  outline-offset: 2px;
+}
+
+/* 🔥 ২. Global Focus Indicator (সব ইন্টারঅ্যাক্টিভ এলিমেন্টের জন্য) */
+*:focus-visible {
+  outline: 3px solid #4f46e5 !important;
+  outline-offset: 2px !important;
+  border-radius: 4px;
+}
+
+/* Dark mode এ focus indicator */
+.dark *:focus-visible {
+  outline-color: #818cf8 !important;
+}
+
+/* 🔥 ৩. Dyslexia-Friendly Font Mode */
+.dyslexia-friendly,
+.dyslexia-friendly * {
+  font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !important;
+  letter-spacing: 0.05em !important;
+  word-spacing: 0.1em !important;
+  line-height: 1.8 !important;
+}
+
+/* 🔥 ৪. Reading Guide Mode (লাইন বাই লাইন পড়ার জন্য) */
+.reading-mode p,
+.reading-mode li,
+.reading-mode span {
+  line-height: 2 !important;
+  letter-spacing: 0.03em !important;
+}
+
+.reading-mode p:hover,
+.reading-mode li:hover {
+  background-color: rgba(251, 191, 36, 0.15) !important;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+/* 🔥 ৫. Text Spacing Control */
+.text-spacing-compact * {
+  line-height: 1.2 !important;
+  letter-spacing: normal !important;
+}
+
+.text-spacing-normal * {
+  line-height: 1.6 !important;
+  letter-spacing: normal !important;
+}
+
+.text-spacing-comfortable * {
+  line-height: 2 !important;
+  letter-spacing: 0.05em !important;
+}
+
+/* 🔥 ৬. Cognitive Load Reduction (সিম্পল মোড) */
+.simple-mode * {
+  animation: none !important;
+  transition: none !important;
+  box-shadow: none !important;
+  background-image: none !important;
+}
+
+/* 🔥 ৭. Custom Scrollbar (Better Visibility) */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4f46e5;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #818cf8;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* 🔥 ৮. Print Friendly Styles */
+@media print {
+  nav, footer, button, .no-print {
+    display: none !important;
+  }
+  
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  a {
+    text-decoration: underline !important;
+    color: black !important;
+  }
+}

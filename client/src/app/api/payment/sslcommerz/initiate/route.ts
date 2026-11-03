@@ -25,7 +25,6 @@ export async function POST(req: NextRequest) {
     const originalPlatformCommission = Number(original_price) * 0.15;
     const finalPlatformCommission = Math.max(0, originalPlatformCommission - Number(discount_amount));
 
-    // অর্ডার সেভ করা (pending_payment স্ট্যাটাসে)
     await supabaseAdmin.from('orders').insert({
       id: tran_id,
       buyer_id, seller_id, product_id,
@@ -74,6 +73,7 @@ export async function POST(req: NextRequest) {
       throw new Error('SSLCommerz Gateway URL পাওয়া যায়নি।');
     }
   } catch (error: any) {
+    console.error('SSLCommerz Init Error:', error);
     return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
   }
 }

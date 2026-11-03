@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
 import Modal from '../ui/Modal';
 import Button from '../ui/Button';
-import Toast from '../ui/Toast'; // 🔥 Toast ইম্পোর্ট করা হয়েছে
+import Toast from '../ui/Toast';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faLock, faUser, faPhone, faEye, faEyeSlash, faGift } from '@fortawesome/free-solid-svg-icons';
 
@@ -36,7 +36,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }: Au
     setEmail(''); setPassword(''); setName(''); setPhone('');
   };
 
-  // 🔥 Google Sign In Handler
+  // 🔥 Google Sign In Handler (বাগ ফিক্সড)
   const handleGoogleSignIn = async () => {
     if (loading) return; // 🔥 ডাবল ক্লিক প্রতিরোধ
     
@@ -48,7 +48,13 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }: Au
           redirectTo: `${window.location.origin}/auth/callback` 
         }
       });
+      
       if (error) throw error;
+      
+      // 🔥 যদি কোনো এরর না থাকে কিন্তু পেজ রিডাইরেক্ট না হয় (যেমন: ইউজার পপআপ বন্ধ করে দিয়েছে বা ব্যাক করেছে), 
+      // তাহলে লোডিং স্টেট আবার ফলস করে দিতে হবে।
+      setLoading(false);
+      
     } catch (error: any) {
       setToast({ message: error.message || 'Google লগইন ব্যর্থ হয়েছে।', type: 'error' });
       setLoading(false);
@@ -239,7 +245,6 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }: Au
           </div>
 
           <div className="pt-2">
-            {/* 🔥 এখানে disabled={loading} যোগ করা হয়েছে */}
             <Button 
               type="submit" 
               variant="primary" 

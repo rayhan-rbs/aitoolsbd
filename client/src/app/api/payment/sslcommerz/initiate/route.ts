@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import SSLCommerzPayment from 'sslcommerz-lts';
 import { createClient } from '@supabase/supabase-js';
-
-const store_id = process.env.NEXT_PUBLIC_SSLCOMMERZ_STORE_ID!;
+const store_id = process.env.SSLCOMMERZ_STORE_ID!;
 const store_passwd = process.env.SSLCOMMERZ_STORE_PASSWORD!;
 const is_live = false; // লাইভ করার সময় true করবেন
 

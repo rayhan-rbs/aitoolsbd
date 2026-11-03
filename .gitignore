@@ -1,7 +1,0 @@
-
-# Sensitive server files
-server/
-*.key
-*.json
-!package.json
-!package-lock.json

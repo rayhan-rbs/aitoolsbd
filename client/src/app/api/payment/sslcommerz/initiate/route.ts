@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// 🔥 require ব্যবহার করা হচ্ছে CommonJS প্যাকেজের জন্য (সবচেয়ে নিরাপদ উপায়)
-const SSLCommerzPayment = require('sslcommerz-lts');
-
 export async function POST(req: NextRequest) {
   try {
     const store_id = process.env.SSLCOMMERZ_STORE_ID;
@@ -11,12 +8,10 @@ export async function POST(req: NextRequest) {
     const site_url = process.env.NEXT_PUBLIC_SITE_URL;
     const supabase_key = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-    // 🔥 DEBUG LOG: Vercel Function Logs-এ এটি চেক করুন
-    console.log("ENV CHECK - Store ID:", store_id ? "OK" : "MISSING");
-    console.log("ENV CHECK - Password:", store_passwd ? "OK" : "MISSING");
-
-    if (!store_id || !store_passwd) {
-      return NextResponse.json({ error: "SSLCommerz credentials missing in environment variables" }, { status: 500 });
+    // ১. এনভায়রনমেন্ট ভেরিয়েবল চেক করা
+    if (!store_id || !store_passwd || !supabase_key) {
+      console.error("Missing Env Vars:", { store_id: !!store_id, store_passwd: !!store_passwd, supabase_key: !!supabase_key });
+      return NextResponse.json({ error: "সার্ভার কনফিগারেশন মিসিং। অ্যাডমিনের সাথে যোগাযোগ করুন।" }, { status: 500 });
     }
 
     const body = await req.json();
@@ -31,12 +26,10 @@ export async function POST(req: NextRequest) {
     const originalPlatformCommission = Number(original_price) * 0.15;
     const finalPlatformCommission = Math.max(0, originalPlatformCommission - Number(discount_amount));
 
-    const supabaseAdmin = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      supabase_key!
-    );
-
-    await supabaseAdmin.from('orders').insert({
+    // ২. Supabase-এ অর্ডার সেভ করা
+    const supabaseAdmin = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, supabase_key);
+    
+    const { error: orderError } = await supabaseAdmin.from('orders').insert({
       id: tran_id,
       buyer_id, seller_id, product_id,
       amount: Number(original_price),
@@ -54,38 +47,54 @@ export async function POST(req: NextRequest) {
       coupon_code: coupon_code || null
     });
 
-    const data = {
-      total_amount: String(amount), // 🔥 String এ কনভার্ট করা জরুরি
-      currency: 'BDT',
-      tran_id: tran_id,
-      success_url: `${site_url}/api/payment/sslcommerz/success`,
-      fail_url: `${site_url}/api/payment/sslcommerz/fail`,
-      cancel_url: `${site_url}/api/payment/sslcommerz/cancel`,
-      ipn_url: `${site_url}/api/payment/sslcommerz/ipn`,
-      shipping_method: 'NO',
-      product_name: 'Digital Product',
-      product_category: 'Digital Goods',
-      product_profile: 'general',
-      cus_name: customer_name || 'Customer',
-      cus_email: customer_email || 'test@test.com',
-      cus_add1: 'Dhaka',
-      cus_city: 'Dhaka',
-      cus_postcode: '1000',
-      cus_country: 'Bangladesh',
-      cus_phone: customer_phone || '01000000000',
-    };
+    if (orderError) throw new Error(orderError.message);
 
-    const is_live = false; // স্যান্ডবক্সের জন্য false
-    const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live);
-    
-    const apiResponse = await sslcz.init(data);
+    // ৩. SSLCommerz API-এর জন্য ডেটা প্রস্তুত করা
+    const is_live = false; // স্যান্ডবক্সের জন্য false, লাইভ হলে true করবেন
+    const sslczURL = is_live 
+      ? 'https://securepay.sslcommerz.com/gwprocess/v4/api.php' 
+      : 'https://sandbox.sslcommerz.com/gwprocess/v4/api.php';
 
-    if (apiResponse?.GatewayPageURL) {
-      return NextResponse.json({ url: apiResponse.GatewayPageURL, tran_id });
+    const formData = new URLSearchParams();
+    formData.append('store_id', store_id);
+    formData.append('store_passwd', store_passwd);
+    formData.append('total_amount', String(amount));
+    formData.append('currency', 'BDT');
+    formData.append('tran_id', tran_id);
+    formData.append('success_url', `${site_url}/api/payment/sslcommerz/success`);
+    formData.append('fail_url', `${site_url}/api/payment/sslcommerz/fail`);
+    formData.append('cancel_url', `${site_url}/api/payment/sslcommerz/cancel`);
+    formData.append('ipn_url', `${site_url}/api/payment/sslcommerz/ipn`);
+    formData.append('shipping_method', 'NO');
+    formData.append('product_name', 'Digital Product');
+    formData.append('product_category', 'Digital Goods');
+    formData.append('product_profile', 'general');
+    formData.append('cus_name', customer_name || 'Customer');
+    formData.append('cus_email', customer_email || 'test@test.com');
+    formData.append('cus_add1', 'Dhaka');
+    formData.append('cus_city', 'Dhaka');
+    formData.append('cus_postcode', '1000');
+    formData.append('cus_country', 'Bangladesh');
+    formData.append('cus_phone', customer_phone || '01000000000');
+
+    // ৪. সরাসরি Fetch API ব্যবহার করে SSLCommerz-এ রিকোয়েস্ট পাঠানো
+    const response = await fetch(sslczURL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: formData.toString(),
+    });
+
+    const data = await response.json();
+
+    if (data.status === 'SUCCESS' && data.GatewayPageURL) {
+      return NextResponse.json({ url: data.GatewayPageURL, tran_id });
     } else {
-      console.error("SSLCommerz API Response:", apiResponse);
-      throw new Error('SSLCommerz Gateway URL পাওয়া যায়নি।');
+      console.error("SSLCommerz API Error Response:", data);
+      throw new Error(data.failedreason || 'SSLCommerz Gateway URL তৈরি করতে ব্যর্থ হয়েছে।');
     }
+
   } catch (error: any) {
     console.error('SSLCommerz Init Error:', error);
     return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });

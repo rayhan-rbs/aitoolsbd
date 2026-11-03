@@ -6,27 +6,46 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
+// POST এবং GET দুটোই হ্যান্ডেল করবে যাতে 404 না আসে
 export async function POST(req: NextRequest) {
-  try {
-    const formData = await req.formData();
-    const status = formData.get('status') as string;
-    const tran_id = formData.get('tran_id') as string;
-    const val_id = formData.get('val_id') as string;
+  return handlePaymentStatus(req);
+}
 
-    if (status === 'VALID') {
-      // অর্ডারের স্ট্যাটাস 'completed' এ আপডেট করা (transaction_id দিয়ে খোঁজা)
+export async function GET(req: NextRequest) {
+  return handlePaymentStatus(req);
+}
+
+async function handlePaymentStatus(req: NextRequest) {
+  try {
+    // POST হলে formData, আর GET হলে searchParams থেকে ডেটা নেওয়া
+    let tran_id, val_id, status;
+
+    if (req.method === 'POST') {
+      const formData = await req.formData();
+      status = formData.get('status') as string;
+      tran_id = formData.get('tran_id') as string;
+      val_id = formData.get('val_id') as string;
+    } else {
+      const searchParams = req.nextUrl.searchParams;
+      status = searchParams.get('status') as string;
+      tran_id = searchParams.get('tran_id') as string;
+      val_id = searchParams.get('val_id') as string;
+    }
+
+    const siteUrl = process.env.SITE_URL;
+
+    if (status === 'VALID' && tran_id) {
       await supabaseAdmin.from('orders').update({ 
         status: 'completed',
-        transaction_id: val_id 
+        transaction_id: val_id || 'manual_verify'
       }).eq('transaction_id', tran_id);
 
-      // সাকসেস হলে ড্যাশবোর্ডের অর্ডার পেজে রিডাইরেক্ট
-      return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SITE_URL}/dashboard/orders?payment=success`);
+      return NextResponse.redirect(`${siteUrl}/dashboard/orders?payment=success`);
     } else {
-      return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SITE_URL}/dashboard/orders?payment=failed`);
+      return NextResponse.redirect(`${siteUrl}/dashboard/orders?payment=failed`);
     }
   } catch (error) {
     console.error('SSLCommerz Success Error:', error);
-    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SITE_URL}/dashboard/orders?payment=error`);
+    return NextResponse.redirect(`${process.env.SITE_URL}/dashboard/orders?payment=error`);
   }
 }

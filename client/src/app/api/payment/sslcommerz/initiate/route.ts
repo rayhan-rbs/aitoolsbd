@@ -5,7 +5,7 @@ export async function POST(req: NextRequest) {
   try {
     const store_id = process.env.SSLCOMMERZ_STORE_ID;
     const store_passwd = process.env.SSLCOMMERZ_STORE_PASSWORD;
-    const site_url = process.env.NEXT_PUBLIC_SITE_URL;
+    const site_url = process.env.SITE_URL;
     const supabase_key = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     // ১. এনভায়রনমেন্ট ভেরিয়েবল চেক করা

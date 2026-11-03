@@ -21,8 +21,8 @@ export async function POST(req: NextRequest) {
     }
 
     // ডেটাবেস আপডেট হওয়ার পর ইউজারকে ড্যাশবোর্ডে পাঠিয়ে দেওয়া
-    return NextResponse.redirect('https://aitoolsbd.vercel.app/dashboard/orders?payment=success');
+    return NextResponse.redirect('https://aitoolsbd.vercel.app/dashboard/orders?payment=success', 303);
   } catch (error) {
-    return NextResponse.redirect('https://aitoolsbd.vercel.app/dashboard/orders?payment=error');
+    return NextResponse.redirect('https://aitoolsbd.vercel.app/dashboard/orders?payment=error', 303);
   }
 }

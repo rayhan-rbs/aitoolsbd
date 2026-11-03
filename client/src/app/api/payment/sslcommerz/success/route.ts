@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
           transaction_id: val_id, // SSLCommerz এর ভেরিফিকেশন ID
           payment_method: 'sslcommerz'
         })
-        .eq('id', tran_id); // আপনার অর্ডার টেবিলের প্রাইমারি কি অনুযায়ী
+        .eq('transaction_id', tran_id); // আপনার অর্ডার টেবিলের প্রাইমারি কি অনুযায়ী
 
       if (error) throw error;
 

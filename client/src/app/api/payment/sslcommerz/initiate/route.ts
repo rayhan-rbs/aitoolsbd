@@ -30,22 +30,21 @@ export async function POST(req: NextRequest) {
     const supabaseAdmin = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, supabase_key);
     
     const { error: orderError } = await supabaseAdmin.from('orders').insert({
-      id: tran_id,
-      buyer_id, seller_id, product_id,
-      amount: Number(original_price),
-      discount_amount: Number(discount_amount),
-      final_amount: Number(amount),
-      platform_commission: finalPlatformCommission,
-      seller_earning: originalSellerEarning,
-      status: 'pending_payment',
-      payment_method: 'sslcommerz',
-      transaction_id: tran_id,
-      download_token: downloadToken,
-      link_expires_at: expiresAt.toISOString(),
-      max_downloads: 3,
-      current_downloads: 0,
-      coupon_code: coupon_code || null
-    });
+	  buyer_id, seller_id, product_id,  // ✅ id ফিল্ড আর থাকবে না
+	  amount: Number(original_price),
+	  discount_amount: Number(discount_amount),
+	  final_amount: Number(amount),
+	  platform_commission: finalPlatformCommission,
+	  seller_earning: originalSellerEarning,
+	  status: 'pending_payment',
+	  payment_method: 'sslcommerz',
+	  transaction_id: tran_id,  // ✅ এটিই SSLCommerz-এর সাথে ম্যাচ করবে
+	  download_token: downloadToken,
+	  link_expires_at: expiresAt.toISOString(),
+	  max_downloads: 3,
+	  current_downloads: 0,
+	  coupon_code: coupon_code || null
+	});
 
     if (orderError) throw new Error(orderError.message);
 

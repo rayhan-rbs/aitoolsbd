@@ -60,10 +60,10 @@ export async function POST(req: NextRequest) {
     formData.append('total_amount', String(amount));
     formData.append('currency', 'BDT');
     formData.append('tran_id', tran_id);
-    formData.append('success_url', `${site_url}/api/payment/sslcommerz/success`);
-    formData.append('fail_url', `${site_url}/api/payment/sslcommerz/fail`);
-    formData.append('cancel_url', `${site_url}/api/payment/sslcommerz/cancel`);
-    formData.append('ipn_url', `${site_url}/api/payment/sslcommerz/ipn`);
+    formData.append('success_url', `${site_url}/dashboard/orders?payment=success`);
+	formData.append('fail_url', `${site_url}/dashboard/orders?payment=failed`);
+	formData.append('cancel_url', `${site_url}/dashboard/orders?payment=cancelled`);
+	formData.append('ipn_url', `${site_url}/api/payment/sslcommerz/ipn`);
     formData.append('shipping_method', 'NO');
     formData.append('product_name', 'Digital Product');
     formData.append('product_category', 'Digital Goods');
